@@ -75,6 +75,7 @@ class SegmentManager:
 
     def next(self):
         self.index = self.index+1
+        lastindex = max(self.data.keys())
         print('___________________Return____' + str(self.data[self.index])) 
         if self.data[self.index]['subs'] == None:
             lastDur = self.data[lastindex]['dur']
