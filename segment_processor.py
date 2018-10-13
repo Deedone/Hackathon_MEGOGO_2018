@@ -28,6 +28,7 @@ class SegmentManager:
         self.data = {}
         self.preload = 3
         self.isstop = False
+        self.time = 0
 
         self.stream = mstream.load(path)
         if self.stream.is_variant:
@@ -63,7 +64,9 @@ class SegmentManager:
                 uri = self.uri + seg
                 urllib.request.urlretrieve(uri,"ts/"+seg)
                 data = process(seg)
-                self.data[to_load] = data
+                print(data)
+                self.data[to_load] = {'subs':data['sub'],'timestamp':self.time,'dur':data['dur']}
+                self.time += data['dur']
             time.sleep(0.5)
 
     def next(self):
@@ -95,7 +98,7 @@ def process(filename):
     subs =  t1.join()
     #mp4 = t2.join()
 
-    return {'subs':subs}#,'video_path':mp4}
+    return subs
     
 
 o = SegmentManager("./index.m3u8") 
