@@ -26,7 +26,7 @@ class SegmentManager:
     def __init__(self, path):
         self.index = 300
         self.data = {}
-        self.preload = 3
+        self.preload = 10
         self.isstop = False
         self.time = 0
 
@@ -36,6 +36,8 @@ class SegmentManager:
         self.t = Thread(target=self.manage)
         self.t.start()
         print("Time to return")
+	while  len(self.data.keys()) < 1:
+		time.sleep(0.1)
         return
 
 

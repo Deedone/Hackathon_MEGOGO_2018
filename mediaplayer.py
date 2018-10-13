@@ -16,6 +16,11 @@
 # import external libraries
 import vlc
 import sys
+from tkinter import *
+from PIL import ImageTk,Image
+import math
+from threading import Thread
+
 
 if sys.version_info[0] < 3:
     import Tkinter as Tk
@@ -57,13 +62,14 @@ class ttkTimer(Thread):
 class Player(Tk.Frame):
     """The main window has to deal with events.
     """
-    def __init__(self, parent, title=None):
+    def __init__(self, parent, subtitiles , title=None):
         Tk.Frame.__init__(self, parent)
-
+        self.check = True
+        self.subtitiles = subtitiles
         self.parent = parent
-
+        
         if title == None:
-            title = "tk_vlc"
+            title = "Subtitiles and mere translate"
         self.parent.title(title)
 
         # Menu Bar
@@ -166,10 +172,26 @@ class Player(Tk.Frame):
             #self.volslider.SetValue(self.player.audio_get_volume() / 2)
             self.volslider.set(self.player.audio_get_volume())
 
+    def LoadSubTitiles(self):
+        while self.check:
+            sub_dict = self.subtitles.next()
+            if sub_dict['subs'] == None:
+                return
+            t0 = time.clock()
+            text_sub = Label(text=sub_dict['subs'] + '\n' + sub_dict['timestamp'], fg="#eee", bg="#333")
+            text_sub.place(x = 400, y = 500)
+            sleep(sub_dict['dur'])
+                
+        
+        
+        
     def OnPlay(self):
         """Toggle the status to Play/Pause.
         If no file is loaded, open the dialog window.
         """
+        self.check = True
+        self.t = Thread(target=self.LoadSubTitiles)
+        self.t.start()
         # check if there is a file to play, otherwise open a
         # Tk.FileDialog to select a file
         if not self.player.get_media():
@@ -186,6 +208,7 @@ class Player(Tk.Frame):
     def OnPause(self):
         """Pause the player.
         """
+        self.check = False
         self.player.pause()
 
     def OnStop(self):

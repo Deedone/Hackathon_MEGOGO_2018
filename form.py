@@ -11,13 +11,26 @@ from moviepy.editor import *
 from mediaplayer import Player
 import vlc
 import sys
+import getStreamFile.getStreamFile
+from segment_processor import SegmentManager
 
+#import translator.translateSubtitles
 
 current_page = 1
 empty_string = "                                                                                         "
 width=900
 height=500
 frame = 1
+
+class Delegate:
+
+    def __init__(self, func, url):
+        self.func = func
+        self.url = url
+
+    def __call__(self):
+        self.func(self.url)
+        
 
 class Application(Frame):
     counter = 1
@@ -75,8 +88,8 @@ class Application(Frame):
                # Загружаем фото на форму через label
                # Просто tkinter не поддерживает прямую загрузку на форму фото
                file = open("Program Files\\HtmlLink\\" + str((r-1)*6 + c) + ".htmlLink", "r")
-               print(file.read())
-               file.close()
+               print()
+             
                
                self.button = Button(frame,
                                     image = self.photo,
@@ -85,11 +98,11 @@ class Application(Frame):
                                     padx="20",             # отступ от границ до содержимого по горизонтали
                                     pady="8",              # отступ от границ до содержимого по вертикали
                                     font="16",
-                                    command = self.__create_windows
+                                    command = Delegate(self.__create_windows, file.read())
                                     )
                self.button.image = self.photo 
                self.button.grid(row = (2*r - 1), column = 1 + c, ipadx = 10, ipady = 5, padx = 10, pady = 5)
-               
+               file.close()
                # Под каждой фотографией есть 2 вещи                
                # 1. Надпись
                # 2. Рейтинг
@@ -106,7 +119,7 @@ class Application(Frame):
     
     def read_file(self, currentIndex):
         """ Read filne that contains photos + description """
-        handle = open("Program Files\\" + str(currentIndex) + ".tvInfo", "r")
+        handle = open("Program Files\\TvInfo\\" + str(currentIndex) + ".tvInfo", "r")
         data = handle.read()  #reading description
         handle.close()
         return data
@@ -177,7 +190,7 @@ class Application(Frame):
                     # Fatal Python Error: PyEval_RestoreThread: NULL tstate
         os._exit(1)
     
-    def __create_windows(self):
+    def __create_windows(self, url):
         """
         t = Toplevel(self)
         t.wm_title("Wiasdasdndow #%s" % self.counter)
@@ -197,13 +210,16 @@ class Application(Frame):
 
         #
         # 1. Load Selenium
+        link_m3u8 = getStreamFile.getStreamFile.getStreamFile(url)
+        print(link_m3u8)
         # 2. Get m3u8 link
         #
+        SM = SegmentManager(link_m3u8)
         
         root1 = Tk()
         root1.protocol("WM_DELETE_WINDOW", self._quit)
-        player = Player(root1, title="Video player(VLC)")
-
+        player = Player(root1, SM, title="Video player(VLC)")
+        
         
         root1.mainloop()
 
@@ -230,7 +246,7 @@ def myfunction(event):
 htmpRequest = HTMLdata(1)
 root = Tk()
 
-
+root.configure(background='black')
 myframe=Frame(root,relief=GROOVE,width=50,height=100,bd=1)
 myframe.place(x=10,y=50)
 

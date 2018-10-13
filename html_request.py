@@ -22,6 +22,8 @@ class HTMLdata():
             os.makedirs("Program Files")
         if not os.path.exists("Program Files\\Pictures"):
             os.makedirs("Program Files\\Pictures")
+        if not os.path.exists("Program Files\\TvInfo"):
+            os.makedirs("Program Files\\TvInfo")
         if not os.path.exists("Program Files\\HtmlLink"):
             os.makedirs("Program Files\\HtmlLink")
  
@@ -44,7 +46,7 @@ class HTMLdata():
             destination = 'Program Files\\Pictures\\' + str(i) + '.jpg'
             urllib.request.urlretrieve(picture_full_url, destination)      #downloading images into project folder(saving as 0-11 .jpg)
             
-            handle = open('Program Files\\' + str(i)+ ".tvInfo", "w")      #creating/opening file 0-11 and writing description in it
+            handle = open('Program Files\\TvInfo\\' + str(i)+ ".tvInfo", "w")      #creating/opening file 0-11 and writing description in it
             handle.write(movie_desc)
             handle.close()
             

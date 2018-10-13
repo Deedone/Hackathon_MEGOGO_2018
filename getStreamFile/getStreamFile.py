@@ -7,7 +7,7 @@ def main():
 	print(getStreamFile("http://baskino.me/films/boeviki/105-nachalo.html"))
 
 def getStreamFile(linkToFilm):
-	server = Server(r"./browsermob-proxy/bin/browsermob-proxy")
+	server = Server(r"c:\Users\Alex\Documents\GitHub\Hackathon_MEGOGO_2018\getStreamFile\browsermob-proxy\bin\browsermob-proxy")
 	server.start()
 	proxy = server.create_proxy()
 
@@ -47,7 +47,7 @@ def getStreamFile(linkToFilm):
 						if "m3u8" in elem['request']['url']:
 							return elem['request']['url']
 
-		if i > 10:
+		if i > 20:
 			print("Error in getting requests. Restart the app.") # TODO: restart browser() in case requests won't load
 
 if __name__ == "__main__":
