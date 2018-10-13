@@ -85,11 +85,12 @@ class SegmentManager:
         closestTimestamp = 0
         for dictLol in self.data[::-1]:
             prevMinDelta = minDelta
-            minDelta = math.abs(timestamp - dictLol['timestamp'])
+            minDelta = math.abs(timestamp - self.data[dictLol]['timestamp'])
             if prevMinDelta < minDelta:
+                self.index = dictLol + 1
                 return closestTimestamp
 
-            closestTimestamp = dictLol['timestamp']
+            closestTimestamp = self.data[dictLol]['timestamp']
 
 
     def jump_to():
