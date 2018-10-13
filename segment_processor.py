@@ -89,13 +89,13 @@ def process(filename):
         filename = filename[:-3]
 
     t1 = ThreadWithReturnValue(target = api.get_subs, args=(filename,))
-    t2 = ThreadWithReturnValue(target = ts_to_mp4, args=(filename,))
+    #t2 = ThreadWithReturnValue(target = ts_to_mp4, args=(filename,))
     t1.start()
-    t2.start()
+    #t2.start()
     subs =  t1.join()
-    mp4 = t2.join()
+    #mp4 = t2.join()
 
-    return {'subs':subs,'video_path':mp4}
+    return {'subs':subs}#,'video_path':mp4}
     
 
 o = SegmentManager("./index.m3u8") 
