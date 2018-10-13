@@ -1,5 +1,6 @@
 from browsermobproxy import Server
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 import time
 
 def main():
@@ -18,11 +19,15 @@ def getStreamFile(linkToFilm):
 	proxy.new_har("defaultName")
 	browser.get(linkToFilm)
 
-	# that's for serials
-	#element = browser.find_element_by_xpath('//*[@id="episode-code"]/iframe')
+	element = 0
+	try:
+		# that's for serials
+		element = browser.find_element_by_xpath('//*[@id="episode-code"]/iframe')
 
-	# and that's for movies
-	element = browser.find_element_by_xpath('//*[@id="basplayer_hd"]/iframe')
+	except NoSuchElementException:
+
+		# and that's for movies
+		element = browser.find_element_by_xpath('//*[@id="basplayer_hd"]/iframe')
 
 	element.click()
 	element.click() # double-click to ensure that video will load
