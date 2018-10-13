@@ -101,4 +101,3 @@ def process(filename):
     return subs
     
 
-o = SegmentManager("./index.m3u8") 
