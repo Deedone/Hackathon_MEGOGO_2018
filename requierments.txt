@@ -4,3 +4,4 @@ BeautifulSoup4
 HTMLParser
 Pillow
 SpeechRecognition
+py_translator(pypandoc may be needed)
