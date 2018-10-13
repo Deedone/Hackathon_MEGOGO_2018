@@ -37,8 +37,9 @@ class SegmentManager:
         self.t = Thread(target=self.manage)
         self.t.start()
         print("Time to return")
-	while  len(self.data.keys()) < 1:
-		time.sleep(0.1)
+        while len(self.data.keys()) < 1:
+            time.sleep(0.1)
+
         return
 
 
@@ -74,6 +75,7 @@ class SegmentManager:
 
     def next(self):
         self.index = self.index+1
+        print('___________________Return____' + str(self.data[self.index])) 
         if self.data[self.index]['subs'] == None:
             lastDur = self.data[lastindex]['dur']
             return {'subs':'','timestamp':self.time,'dur':lastDur}

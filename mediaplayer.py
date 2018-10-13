@@ -60,13 +60,15 @@ class ttkTimer(Thread):
         return self.iters
 
 class Player(Tk.Frame):
-    """The main window has to deal with events.
     """
-    def __init__(self, parent, subtitiles , title=None):
+         The main window has to deal with events.
+    """
+    def __init__(self, parent, subtitles , title=None):
         Tk.Frame.__init__(self, parent)
-        self.check = True
-        self.subtitiles = subtitiles
+        self.check = False
+        self.subtitles = subtitles
         self.parent = parent
+        self.t = Thread()
         
         if title == None:
             title = "Subtitiles and mere translate"
@@ -174,13 +176,15 @@ class Player(Tk.Frame):
 
     def LoadSubTitiles(self):
         while self.check:
+            
             sub_dict = self.subtitles.next()
+            print('_____1111___'+sub_dict['subs'])
             if sub_dict['subs'] == None:
                 return
-            t0 = time.clock()
-            text_sub = Label(text=sub_dict['subs'] + '\n' + sub_dict['timestamp'], fg="#eee", bg="#333")
-            text_sub.place(x = 400, y = 500)
-            sleep(sub_dict['dur'])
+            print('_____2222___'+sub_dict['subs'])
+            text_sub = Label(text=str(sub_dict['subs']) + '\n' + str(sub_dict['timestamp']), fg="#eee", bg="#333")
+            text_sub.grid(row = 0, column = 0)
+            time.sleep(sub_dict['dur'])
                 
         
         
@@ -190,8 +194,9 @@ class Player(Tk.Frame):
         If no file is loaded, open the dialog window.
         """
         self.check = True
-        self.t = Thread(target=self.LoadSubTitiles)
-        self.t.start()
+        if not self.t.is_alive():
+            self.t = Thread(target=self.LoadSubTitiles)
+            self.t.start()
         # check if there is a file to play, otherwise open a
         # Tk.FileDialog to select a file
         if not self.player.get_media():
