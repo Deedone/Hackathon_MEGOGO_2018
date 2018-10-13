@@ -1,4 +1,12 @@
 from tkinter import *
+from PIL import ImageTk,Image  
+from html.parser import HTMLParser
+from bs4 import BeautifulSoup
+
+import tkinter.ttk as ttk
+import urllib
+import math
+from html_request import *
 
 class MainWindow(Frame):
     counter = 0
@@ -7,7 +15,7 @@ class MainWindow(Frame):
         self.button = Button(self, text="Create new window", 
                                 command=self.create_window)
         self.button.pack(side="top")
-
+        
     def create_window(self):
         self.counter += 1
         t = Toplevel(self)
@@ -15,8 +23,8 @@ class MainWindow(Frame):
         l = Label(t, text="This is window #%s" % self.counter)
         l.pack(side="top", fill="both", expand=True, padx=100, pady=100)
 
-if __name__ == "__main__":
-    root = Tk()
-    main = MainWindow(root)
-    main.pack(side="top", fill="both", expand=True)
-    root.mainloop()
+
+root = Tk()
+main = MainWindow(root)
+main.pack(side="top", fill="both", expand=True)
+root.mainloop()

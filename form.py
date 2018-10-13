@@ -3,17 +3,23 @@ from PIL import ImageTk,Image
 from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 
+from video_player import*
 import tkinter.ttk as ttk
 import urllib
 import math
 from html_request import *
+from moviepy.editor import *
+import vlc
+
 
 current_page = 1
 empty_string = "                                                                                         "
 width=900
 height=500
 frame = 1
+
 class Application(Frame):
+    counter = 1
     """ GUI для обработки объектов на форме """
     
     def __init__(self, master, frame):
@@ -26,7 +32,7 @@ class Application(Frame):
         counter = 0
         for letter in word:
             counter = counter + 1
-        return counter
+        return counter    
     
     def create_widgets(self, frame):
         """ Создать виджеты для фрейма """
@@ -73,7 +79,8 @@ class Application(Frame):
                                     foreground="#ccc",     # цвет текста
                                     padx="20",             # отступ от границ до содержимого по горизонтали
                                     pady="8",              # отступ от границ до содержимого по вертикали
-                                    font="16"
+                                    font="16",
+                                    command = self.__create_windows
                                     )
                self.button.image = self.photo 
                self.button.grid(row = (2*r - 1), column = 1 + c, ipadx = 10, ipady = 5, padx = 10, pady = 5)
@@ -93,12 +100,14 @@ class Application(Frame):
                self.create_btn_next()
     
     def read_file(self, currentIndex):
+        """ Read filne that contains photos + description """
         handle = open("Program Files\\" + str(currentIndex) + ".tvInfo", "r")
         data = handle.read()  #reading description
         handle.close()
         return data
 
     def clear_text(self):
+        """ Celar space for new label(text below movie pic) """
         global empty_string
                 
         for r in range(1,3):
@@ -125,7 +134,7 @@ class Application(Frame):
                           foreground="#ccc",     # цвет текста
                           padx="10",             # отступ от границ до содержимого по горизонтали
                           pady="5",              # отступ от границ до содержимого по вертикали
-                          font="11",            # высота шрифта
+                          font="11",             # высота шрифта
                           command = self.priv_page
                           )
         btn_page_before.place(y = 0,x = 550)
@@ -141,8 +150,8 @@ class Application(Frame):
                           foreground="#ccc",     # цвет текста
                           padx="10",             # отступ от границ до содержимого по горизонтали
                           pady="5",              # отступ от границ до содержимого по вертикали
-                          font="11",             # высота шрифта
-                          command=self.next_page
+                          font="11"              # высота шрифта
+                      
                           )
         
         btn_page_next.place(y = 0,x = 600)
@@ -154,6 +163,16 @@ class Application(Frame):
         current_page = current_page + 1
         htmpRequest = HTMLdata(current_page)
         self.create_widgets(frame=frame)
+      
+    def __create_windows(self):
+        t = Toplevel(self)
+        t.wm_title("Wiasdasdndow #%s" % self.counter)
+        l = Label(t, text="This is window #%s" % self.counter)
+        l.pack(side="top", fill="both", expand=True, padx=width, pady=height)
+        print(vlc.__dict__)
+        player = vlc.MediaPlayer("http://185.38.12.43/sec/1539468805/343534338d064aef7a0d8e8e23411662971fe1ea4222f4df/ivs/77/65/2de78733cbed/hls/tracks-4,5/index.m3u8")
+        player.play()
+        self.counter += 1
 
     def priv_page(self):
         global current_page
@@ -164,7 +183,9 @@ class Application(Frame):
             current_page = current_page - 1
             htmpRequest = HTMLdata(current_page)
             self.create_widgets(frame=frame)
-            
+ 
+
+        
 def myfunction(event):
     global height
     global width
