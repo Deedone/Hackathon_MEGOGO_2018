@@ -67,6 +67,7 @@ def get_subs(segment): # segment is the name of .ts file (without .ts)
             audio = r.record(source)
     sub = r.recognize_google(audio, language="ru_RU")
     write_cache(hs,sub)
+    os.remove(outfile)
     return sub
 
 

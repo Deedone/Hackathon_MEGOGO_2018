@@ -1,0 +1,7 @@
+m3u8
+requests
+BeautifulSoup4
+HTMLParser
+Pillow
+SpeechRecognition
+py_translator(pypandoc may be needed)
