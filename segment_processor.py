@@ -5,6 +5,7 @@ import m3u8 as mstream
 import urllib.request
 import time
 import atexit
+import math
 
 class ThreadWithReturnValue(Thread):#StackOverflow rulez
     def __init__(self, group=None, target=None, name=None,
@@ -73,7 +74,23 @@ class SegmentManager:
 
     def next(self):
         self.index = self.index+1
-        return self.data[self.index]
+        try:
+            return self.data[self.index]
+        except Exception: # if there are no subtitles - returns empty string as subtitle
+            lastDur = self.data[lastindex]['dur']
+            return {'subs':'','timestamp':self.time,'dur':lastDur}
+
+    def closestSubtitles(self, timestapm): # returns timestamp(number in secs) of closest data['timestamp']
+        minDelta = prevMinDelta = 9999
+        closestTimestamp = 0
+        for dictLol in self.data[::-1]:
+            prevMinDelta = minDelta
+            minDelta = math.abs(timestamp - dictLol['timestamp'])
+            if prevMinDelta < minDelta:
+                return closestTimestamp
+
+            closestTimestamp = dictLol['timestamp']
+
 
     def jump_to():
         pass
