@@ -6,4 +6,4 @@ Pillow
 SpeechRecognition
 pypandoc
 py_translator
-pip install browsermob-proxy
+browsermob-proxy
