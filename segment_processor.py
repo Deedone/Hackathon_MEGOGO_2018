@@ -24,7 +24,7 @@ class ThreadWithReturnValue(Thread):#StackOverflow rulez
 class SegmentManager:
 
     def __init__(self, path):
-        self.index = 300
+        self.index = -1
         self.data = {}
         self.preload = 10
         self.isstop = False
@@ -54,7 +54,7 @@ class SegmentManager:
 
     def manage(self):
         while not self.isstop:
-            lastindex = 300
+            lastindex = -1
             try:
                 lastindex = max(self.data.keys())
             except ValueError:
