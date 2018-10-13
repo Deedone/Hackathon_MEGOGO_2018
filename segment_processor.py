@@ -74,11 +74,13 @@ class SegmentManager:
 
     def next(self):
         self.index = self.index+1
-        try:
-            return self.data[self.index]
-        except Exception: # if there are no subtitles - returns empty string as subtitle
+        if self.data[self.index]['subs'] == None:
             lastDur = self.data[lastindex]['dur']
             return {'subs':'','timestamp':self.time,'dur':lastDur}
+        else :
+            return self.data[self.index]
+        # if there are no subtitles - returns empty string as subtitle
+            
 
     def closestSubtitles(self, timestapm): # returns timestamp(number in secs) of closest data['timestamp']
         minDelta = prevMinDelta = 9999
