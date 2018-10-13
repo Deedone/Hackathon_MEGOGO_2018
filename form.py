@@ -3,15 +3,14 @@ from PIL import ImageTk,Image
 from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 
-from video_player import*
 import tkinter.ttk as ttk
 import urllib
 import math
 from html_request import *
 from moviepy.editor import *
+from mediaplayer import Player
 import vlc
 import sys
-import gi
 
 
 current_page = 1
@@ -75,6 +74,10 @@ class Application(Frame):
                self.photo = ImageTk.PhotoImage(self.img)
                # Загружаем фото на форму через label
                # Просто tkinter не поддерживает прямую загрузку на форму фото
+               file = open("Program Files\\HtmlLink\\" + str((r-1)*6 + c) + ".htmlLink", "r")
+               print(file.read())
+               file.close()
+               
                self.button = Button(frame,
                                     image = self.photo,
                                     background="#555",     # фоновый цвет кнопки
@@ -165,8 +168,17 @@ class Application(Frame):
         current_page = current_page + 1
         htmpRequest = HTMLdata(current_page)
         self.create_widgets(frame=frame)
-      
+        
+    def _quit(self):
+        print("_quit: bye")
+        root = Tk()
+        root.quit()     # stops mainloop
+        root.destroy()  # this is necessary on Windows to prevent
+                    # Fatal Python Error: PyEval_RestoreThread: NULL tstate
+        os._exit(1)
+    
     def __create_windows(self):
+        """
         t = Toplevel(self)
         t.wm_title("Wiasdasdndow #%s" % self.counter)
         l = Label(t, text="This is window #%s" % self.counter)
@@ -175,7 +187,27 @@ class Application(Frame):
         player = vlc.MediaPlayer("http://185.38.12.43/sec/1539468805/343534338d064aef7a0d8e8e23411662971fe1ea4222f4df/ivs/77/65/2de78733cbed/hls/tracks-4,5/index.m3u8")
         player.play()
         self.counter += 1
+        
+        root = Tk_get_root()
+        root.protocol("WM_DELETE_WINDOW", _quit)
 
+        player = Player(root, title="Video player(VLC)")
+        # show the player window centred and run the application
+        """
+
+        #
+        # 1. Load Selenium
+        # 2. Get m3u8 link
+        #
+        
+        root1 = Tk()
+        root1.protocol("WM_DELETE_WINDOW", self._quit)
+        player = Player(root1, title="Video player(VLC)")
+
+        
+        root1.mainloop()
+
+         
     def priv_page(self):
         global current_page
         global frame

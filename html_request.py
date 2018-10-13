@@ -22,6 +22,9 @@ class HTMLdata():
             os.makedirs("Program Files")
         if not os.path.exists("Program Files\\Pictures"):
             os.makedirs("Program Files\\Pictures")
+        if not os.path.exists("Program Files\\HtmlLink"):
+            os.makedirs("Program Files\\HtmlLink")
+ 
 
     def get_img_tags(self, url, page_number):
         movie_desc = ' '
@@ -34,7 +37,8 @@ class HTMLdata():
         for item in film_lists:
             movie_link = item.find('img').get('src')                        #link to images
             movie_desc = item.find('img').get('alt')                        #link to description(text)
-            print(movie_link + " \n "+ movie_desc)
+            movie_link_html = item.find('a').get('href')
+            print(movie_link + " \n "+ movie_desc + '\n' + movie_link_html)
             
             picture_full_url = str(movie_link)
             destination = 'Program Files\\Pictures\\' + str(i) + '.jpg'
@@ -43,6 +47,10 @@ class HTMLdata():
             handle = open('Program Files\\' + str(i)+ ".tvInfo", "w")      #creating/opening file 0-11 and writing description in it
             handle.write(movie_desc)
             handle.close()
+            
+            handle_for_html = open('Program Files\\HtmlLink\\' + str(i)+ ".htmlLink", "w")      #creating/opening file 0-11 and writing description in it
+            handle_for_html.write(movie_link_html)
+            handle_for_html.close()
             
             print(str(i) + ' downloaded\n')
             i = i + 1
