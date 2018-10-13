@@ -10,6 +10,8 @@ import math
 from html_request import *
 from moviepy.editor import *
 import vlc
+import sys
+import gi
 
 
 current_page = 1
