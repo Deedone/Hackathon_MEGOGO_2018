@@ -3,6 +3,7 @@ import subprocess
 import os
 import hashlib
 import json
+import wave
 
 
 
@@ -63,15 +64,17 @@ def get_subs(segment): # segment is the name of .ts file (without .ts)
 
 
     segmentAudio = sr.AudioFile(outfile)
+    dur = 0;
     with segmentAudio as source:
-            audio = r.record(source)
+        print(source.DURATION)
+        dur = source.DURATION
+        audio = r.record(source)
     sub = None
     try:
         sub = r.recognize_google(audio, language="ru_RU")
     except sr.UnknownValueError:
         pass
-    write_cache(hs,sub)
+    write_cache(hs,{'sub':sub,'dur':dur})
     os.remove(outfile)
-    return sub
-
+    return {'sub':sub,'dur':dur}
 
