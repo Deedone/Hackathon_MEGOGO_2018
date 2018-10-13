@@ -46,8 +46,8 @@ def get_hash(filename):
 def get_subs(segment): # segment is the name of .ts file (without .ts)
     r = sr.Recognizer()
 
-    infile = segment + ".ts"
-    outfile = segment + ".wav"
+    infile = "ts/"+segment + ".ts"
+    outfile = "wavs/"+segment + ".wav"
 
 
 
@@ -62,10 +62,14 @@ def get_subs(segment): # segment is the name of .ts file (without .ts)
     subprocess.run(["ffmpeg", "-i", infile, outfile,"-y","-loglevel", "panic","-hide_banner","-nostats"])
 
 
-    segmentAudio = sr.AudioFile(segment + ".wav")
+    segmentAudio = sr.AudioFile(outfile)
     with segmentAudio as source:
             audio = r.record(source)
-    sub = r.recognize_google(audio, language="ru_RU")
+    sub = None
+    try:
+        sub = r.recognize_google(audio, language="ru_RU")
+    except sr.UnknownValueError:
+        pass
     write_cache(hs,sub)
     os.remove(outfile)
     return sub
