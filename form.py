@@ -247,6 +247,7 @@ htmpRequest = HTMLdata(1)
 root = Tk()
 
 root.configure(background='black')
+
 myframe=Frame(root,relief=GROOVE,width=50,height=100,bd=1)
 myframe.place(x=10,y=50)
 
