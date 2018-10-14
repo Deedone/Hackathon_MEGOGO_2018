@@ -21,7 +21,6 @@ from PIL import ImageTk,Image
 import math
 from threading import Thread
 
-
 if sys.version_info[0] < 3:
     import Tkinter as Tk
     from Tkinter import ttk
@@ -59,16 +58,20 @@ class ttkTimer(Thread):
     def get(self):
         return self.iters
 
+
+
 class Player(Tk.Frame):
     """
          The main window has to deal with events.
     """
-    def __init__(self, parent, subtitles , title=None):
+    def __init__(self, parent, subtitles, link, title=None):
         Tk.Frame.__init__(self, parent)
         self.check = False
         self.subtitles = subtitles
         self.parent = parent
         self.t = Thread()
+        self.sub_label = ttk.Label()
+        self.link = link
         
         if title == None:
             title = "Subtitiles and mere translate"
@@ -91,10 +94,20 @@ class Player(Tk.Frame):
         self.videopanel.pack(fill=Tk.BOTH,expand=1)
 
         ctrlpanel = ttk.Frame(self.parent)
+
+        #pause_img = PhotoImage(file="c:/Users/Alex/Documents/GitHub/Hackathon_MEGOGO_2018/icons/pausebutton.gif")
         pause  = ttk.Button(ctrlpanel, text="Pause", command=self.OnPause)
+        
+        #pause.config(image=pause_img)
+
         play   = ttk.Button(ctrlpanel, text="Play", command=self.OnPlay)
+
         stop   = ttk.Button(ctrlpanel, text="Stop", command=self.OnStop)
+
         volume = ttk.Button(ctrlpanel, text="Volume", command=self.OnSetVolume)
+
+        self.sub_label = ttk.Label(ctrlpanel, text="Some text")
+        self.sub_label.pack(side=Tk.BOTTOM)
         pause.pack(side=Tk.LEFT)
         play.pack(side=Tk.LEFT)
         stop.pack(side=Tk.LEFT)
@@ -118,6 +131,7 @@ class Player(Tk.Frame):
         # VLC player controls
         self.Instance = vlc.Instance()
         self.player = self.Instance.media_player_new()
+        #print(self.player.__dict__)
         #self.player.set_mrl('http://185.38.12.43/sec/1539468805/343534338d064aef7a0d8e8e23411662971fe1ea4222f4df/ivs/77/65/2de78733cbed/hls/tracks-4,5/index.m3u8')
         #self.player.play()
         # below is a test, now use the File->Open file menu
@@ -130,9 +144,8 @@ class Player(Tk.Frame):
         self.timer.start()
         self.parent.update()
 
-        #self.player.set_hwnd(self.GetHandle()) # for windows, OnOpen does does this
-
-
+        #self.player.set_hwnd(self.GetHandle()) # for windows, OnOpen does does this       
+    
     def OnExit(self, evt):
         """Closes the window.
         """
@@ -152,9 +165,9 @@ class Player(Tk.Frame):
             # dirname  = os.path.dirname(fullname)
             # filename = os.path.basename(fullname)
             # Creation
-            self.Media = self.Instance.media_new('http://185.38.12.43/sec/1539468805/343534338d064aef7a0d8e8e23411662971fe1ea4222f4df/ivs/77/65/2de78733cbed/hls/tracks-4,5/index.m3u8')
+            self.Media = self.Instance.media_new(self.link)
             self.player.set_media(self.Media)
-            # Report the title of the file chosen
+                       # Report the title of the file chosen
             #title = self.player.get_title()
             #  if an error was encountred while retriving the title, then use
             #  filename
@@ -175,17 +188,25 @@ class Player(Tk.Frame):
             self.volslider.set(self.player.audio_get_volume())
 
     def LoadSubTitiles(self):
-        while self.check:
+        while not self.player.is_playing(): # wait for video to start
+            pass
+        while self.check: # then start to print subtitles
             
             sub_dict = self.subtitles.next()
             print('_____1111___'+sub_dict['subs'])
             if sub_dict['subs'] == None:
                 return
             print('_____2222___'+sub_dict['subs'])
-            text_sub = Label(text=str(sub_dict['subs']) + '\n' + str(sub_dict['timestamp']), fg="#eee", bg="#333")
-            text_sub.grid(row = 0, column = 0)
+            lbl = '                                                                                           '
+
+            print('DURATION : '+str(sub_dict['dur']))
+               
+            self.sub_label['text'] =  lbl
+            self.sub_label['text'] = str(sub_dict['subs']) + '\n' + str(sub_dict['timestamp'])
+            self.sub_label.pack()
+            #print('PLAYER'+str(vlc.MediaPlayer.get_time()))
             time.sleep(sub_dict['dur'])
-                
+                    
         
         
         
@@ -193,6 +214,9 @@ class Player(Tk.Frame):
         """Toggle the status to Play/Pause.
         If no file is loaded, open the dialog window.
         """
+        #print('__________________________' + str(self.player.get_time()))
+        print(self.player.is_playing())
+
         self.check = True
         if not self.t.is_alive():
             self.t = Thread(target=self.LoadSubTitiles)

@@ -95,10 +95,11 @@ class SegmentManager:
 
     def next(self):
         self.index = self.index+1
+        lastindex = max(self.data.keys())
         print('___________________Return____' + str(self.data[self.index])) 
         if self.data[self.index]['subs'] == None:
-            lastDur = self.data[lastindex]['dur']
-            return {'subs':'','timestamp':self.time,'dur':lastDur}
+            self.data[self.index]['subs'] = ""
+            return self.data[self.index]
         else :
             return self.data[self.index]
         # if there are no subtitles - returns empty string as subtitle

@@ -218,7 +218,7 @@ class Application(Frame):
         
         root1 = Tk()
         root1.protocol("WM_DELETE_WINDOW", self._quit)
-        player = Player(root1, SM, title="Video player(VLC)")
+        player = Player(root1, SM, link_m3u8, title="Video player(VLC)")
         
         
         root1.mainloop()
@@ -247,6 +247,7 @@ htmpRequest = HTMLdata(1)
 root = Tk()
 
 root.configure(background='black')
+
 myframe=Frame(root,relief=GROOVE,width=50,height=100,bd=1)
 myframe.place(x=10,y=50)
 
