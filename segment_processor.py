@@ -115,9 +115,9 @@ class SegmentManager:
         print(num)
         if  count_sub1 + 1 >= count_all:
             string_sub1 =  combtext['sub']
-            string_sub2 =  ""
+            string_sub2 =  combtext['sub'][num:]
         elif count_sub2 + 1 >= count_all:
-            string_sub1 =  ""
+            string_sub1 =   combtext['sub'][:num]
             string_sub2 =   combtext['sub']
         else:
             string_sub1 =  combtext['sub'][0  :num]
