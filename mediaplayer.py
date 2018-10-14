@@ -20,17 +20,11 @@ from tkinter import *
 from PIL import ImageTk,Image
 import math
 from threading import Thread
+import tkinter as Tk
+from tkinter import ttk
+from tkinter.filedialog import askopenfilename
 
-if sys.version_info[0] < 3:
-    import Tkinter as Tk
-    from Tkinter import ttk
-    from Tkinter.filedialog import askopenfilename
-else:
-    import tkinter as Tk
-    from tkinter import ttk
-    from tkinter.filedialog import askopenfilename
-
-# import standard libraries
+#1 import standard libraries
 import os
 import pathlib
 from threading import Thread, Event
@@ -70,7 +64,7 @@ class Player(Tk.Frame):
         self.subtitles = subtitles
         self.parent = parent
         self.t = Thread()
-        self.sub_label = ttk.Label()
+        self.sub_label = Label()
         self.link = link
         
         if title == None:
@@ -89,24 +83,56 @@ class Player(Tk.Frame):
 
         # The second panel holds controls
         self.player = None
-        self.videopanel = ttk.Frame(self.parent)
+        self.videopanel = Frame(self.parent)
         self.canvas = Tk.Canvas(self.videopanel).pack(fill=Tk.BOTH,expand=1)
         self.videopanel.pack(fill=Tk.BOTH,expand=1)
 
-        ctrlpanel = ttk.Frame(self.parent)
+        ctrlpanel = Frame(self.parent)
 
         #pause_img = PhotoImage(file="c:/Users/Alex/Documents/GitHub/Hackathon_MEGOGO_2018/icons/pausebutton.gif")
-        pause  = ttk.Button(ctrlpanel, text="Pause", command=self.OnPause)
+        pause  = Button(ctrlpanel,
+                            text="Pause",
+                            background="#555",     # фоновый цвет кнопки
+                            foreground="#ccc",     # цвет текста
+                            padx="20",             # отступ от границ до содержимого по горизонтали
+                            pady="8",              # отступ от границ до содержимого по вертикали
+                            font="16",
+                            command=self.OnPause
+                            )
         
         #pause.config(image=pause_img)
 
-        play   = ttk.Button(ctrlpanel, text="Play", command=self.OnPlay)
+        play   = Button(ctrlpanel,
+                            text="Play",
+                            background="#555",     # фоновый цвет кнопки
+                            foreground="#ccc",     # цвет текста
+                            padx="20",             # отступ от границ до содержимого по горизонтали
+                            pady="8",              # отступ от границ до содержимого по вертикали
+                            font="16",                            
+                            command=self.OnPlay
+                            )
 
-        stop   = ttk.Button(ctrlpanel, text="Stop", command=self.OnStop)
+        stop   = Button(ctrlpanel,
+                            text="Stop",
+                            background="#555",     # фоновый цвет кнопки
+                            foreground="#ccc",     # цвет текста
+                            padx="20",             # отступ от границ до содержимого по горизонтали
+                            pady="8",              # отступ от границ до содержимого по вертикали
+                            font="16",                          
+                            command=self.OnStop
+                            )
 
-        volume = ttk.Button(ctrlpanel, text="Volume", command=self.OnSetVolume)
+        volume = Button(ctrlpanel,
+                            text="Volume",
+                            background="#555",     # фоновый цвет кнопки
+                            foreground="#ccc",     # цвет текста
+                            padx="20",             # отступ от границ до содержимого по горизонтали
+                            pady="8",              # отступ от границ до содержимого по вертикали
+                            font="16",                           
+                            command=self.OnSetVolume
+                            )
 
-        self.sub_label = ttk.Label(ctrlpanel, text="Some text")
+        self.sub_label = Label(ctrlpanel, text="Some text", font = 'Arial 10  bold ')
         self.sub_label.pack(side=Tk.BOTTOM)
         pause.pack(side=Tk.LEFT)
         play.pack(side=Tk.LEFT)
@@ -118,7 +144,7 @@ class Player(Tk.Frame):
         self.volslider.pack(side=Tk.LEFT)
         ctrlpanel.pack(side=Tk.BOTTOM)
 
-        ctrlpanel2 = ttk.Frame(self.parent)
+        ctrlpanel2 = Frame(self.parent)
         self.scale_var = Tk.DoubleVar()
         self.timeslider_last_val = ""
         self.timeslider = Tk.Scale(ctrlpanel2, variable=self.scale_var, command=self.scale_sel,

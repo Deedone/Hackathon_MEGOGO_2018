@@ -13,7 +13,9 @@ import vlc
 import sys
 import getStreamFile.getStreamFile
 from segment_processor import SegmentManager
-
+import m3u8
+import requests
+import requestToServer  
 #import translator.translateSubtitles
 
 current_page = 1
@@ -42,6 +44,12 @@ class Application(Frame):
         self.grid()
         self.create_widgets(frame)
 
+    def search(self):
+        print(self.find.get())
+        if self.find != "":
+            HTMLdata.get_img_tags_new(requestToServer.RequestToSearch.post(self.find.get()))
+            self.create_widgets(frame)
+    
     def get_letter_count(self, word):
         counter = 0
         for letter in word:
@@ -53,15 +61,16 @@ class Application(Frame):
         # Виджет поиска
         self.find = StringVar()
         self.find_entry = Entry(textvariable = self.find)
-        self.find_entry.grid(row = 0, column = 1,ipadx = 40, padx = 10, pady = 10)
+        self.find_entry.grid(row = 0, column = 1,ipadx = 40,  padx = 10, pady = 10)
         # Кнопка поиска
-        self.btn_find = Button(self,
+        self.btn_find = Button(self,    
                           text = "Find",
                           background="#555",     # фоновый цвет кнопки
                           foreground="#ccc",     # цвет текста
                           padx="20",             # отступ от границ до содержимого по горизонтали
                           pady="8",              # отступ от границ до содержимого по вертикали
-                          font="16"              # высота шрифта
+                          font="16",              # высота шрифта
+                          command = self.search
                           )
         self.btn_find.grid(row = 0, column = 0)
         
@@ -135,7 +144,10 @@ class Application(Frame):
 
     def create_text_under_photo(self, data, r, c):
         global frame
-        self.lbl = Label(frame, text = data)
+        self.lbl = Label(frame,
+                         text = data,
+                         font = 'Arial 10  bold '
+                         )
         self.lbl.grid(row = 2*r, column = 1 + c, ipadx = 2, ipady = 2, padx = 2, pady = 2)
                
     def create_btn_before(self):
@@ -168,8 +180,8 @@ class Application(Frame):
                           foreground="#ccc",     # цвет текста
                           padx="10",             # отступ от границ до содержимого по горизонтали
                           pady="5",              # отступ от границ до содержимого по вертикали
-                          font="11"              # высота шрифта
-                      
+                          font="11",              # высота шрифта
+                          command = self.next_page
                           )
         
         btn_page_next.place(y = 0,x = 600)
@@ -245,25 +257,32 @@ def myfunction(event):
              
 htmpRequest = HTMLdata(1)
 root = Tk()
-
-root.configure(background='black')
+img = Image.open("fon.jpg")
+img = img.resize((1600, 900),  Image.ANTIALIAS)
+photo = ImageTk.PhotoImage(img)
+background_label = Label(root, image=photo)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 myframe=Frame(root,relief=GROOVE,width=50,height=100,bd=1)
 myframe.place(x=10,y=50)
 
+
+
 canvas=Canvas(myframe)
 frame=Frame(canvas)
-myscrollbar=Scrollbar(myframe,orient="vertical",command=canvas.yview)
-myscrollbarX=Scrollbar(myframe,orient="horizontal",command=canvas.xview)
+myscrollbar=Scrollbar(myframe,orient="vertical",command=canvas.yview, width=4)
+myscrollbarX=Scrollbar(myframe,orient="horizontal",command=canvas.xview, width=4)
 canvas.configure(yscrollcommand=myscrollbar.set)
 canvas.configure(xscrollcommand=myscrollbarX.set)
 
+#canvas.create_image(x=0,y=0, image=photo)
 width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
+canvas.create_image(0,0,anchor='nw',image=photo)
 
 myscrollbar.pack(side="right",fill="y")
 myscrollbarX.pack(side="bottom",fill="x")
-canvas.pack(side="left")
+canvas.pack()#(side="left")
 canvas.create_window((0,0),window=frame,anchor='nw')
 frame.bind("<Configure>",myfunction)
 
@@ -271,7 +290,9 @@ root.title("Movies and TV series")
 print(root.winfo_screenwidth())
 print(root.winfo_screenheight())
 
+
 app = Application(root, frame)
 
 root.geometry(str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight()))
+#root.wm_attributes("-transparentcolor", "default")
 root.mainloop()
