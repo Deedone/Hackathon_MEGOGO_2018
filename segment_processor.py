@@ -6,6 +6,8 @@ import urllib.request
 import time
 import atexit
 import math
+import wave
+import re
 
 class ThreadWithReturnValue(Thread):#StackOverflow rulez
     def __init__(self, group=None, target=None, name=None,
@@ -71,7 +73,54 @@ class SegmentManager:
                 print(data)
                 self.data[to_load] = {'subs':data['sub'],'timestamp':self.time,'dur':data['dur']}
                 self.time += data['dur']
-            time.sleep(0.5)
+                if to_load % 2 == 1:
+                    self.adjust_subs(to_load - 1)
+            time.sleep(0.2)
+
+    def adjust_subs(self,start):
+        print("Starting sub adjustment+++===---")
+
+        with wave.open("./wavs/combined.wav","wb") as out:
+            for i in range(2):
+                print(self.data[start + i]['subs'], end=" ")
+                with wave.open("./wavs/segment"+str(start + i + 1) +".wav","rb") as inp:
+                    if i == 0:
+                        out.setparams(inp.getparams())
+                    out.writeframes(inp.readframes(inp.getnframes()))
+
+                    
+        combtext = api.get_subs("","./wavs/combined.wav")
+        print("Combined - "+str(combtext))
+        #######################################################
+        count_all  = 0
+        count_sub1 = 0
+        count_sub2 = 0
+
+        for ch in str(combtext['sub']):
+            if ch == ' ':
+                count_all += 1
+        print(count_all)
+        for ch in str(self.data[start + 0]['subs']):
+            if ch == ' ':
+                
+                count_sub1 += 1
+
+        print(count_sub1)
+        num = 0
+        for i in range(count_sub1):
+          print(combtext['sub'].find(' ', num))
+          num = combtext['sub'].find(' ', num)
+          num +=1
+
+        print(num)
+        
+        string_sub1 =  combtext['sub'][0  :num]
+        string_sub2 =  combtext['sub'][num: ]
+        self.data[start + 0]['subs'] = string_sub1
+        self.data[start + 1]['subs'] = string_sub2
+        print('Super Combiner 11111 : ' + string_sub1 + '\n' + string_sub2)
+        print('Super Combiner 22222 :' + self.data[start + 0]['subs'] + '\n' + self.data[start + 1]['subs'] )
+
 
     def next(self):
         self.index = self.index+1
