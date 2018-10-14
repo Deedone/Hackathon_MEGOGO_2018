@@ -94,10 +94,18 @@ class Player(Tk.Frame):
         self.videopanel.pack(fill=Tk.BOTH,expand=1)
 
         ctrlpanel = ttk.Frame(self.parent)
+
+        #pause_img = PhotoImage(file="c:/Users/Alex/Documents/GitHub/Hackathon_MEGOGO_2018/icons/pausebutton.gif")
         pause  = ttk.Button(ctrlpanel, text="Pause", command=self.OnPause)
+        
+        #pause.config(image=pause_img)
+
         play   = ttk.Button(ctrlpanel, text="Play", command=self.OnPlay)
+
         stop   = ttk.Button(ctrlpanel, text="Stop", command=self.OnStop)
+
         volume = ttk.Button(ctrlpanel, text="Volume", command=self.OnSetVolume)
+
         self.sub_label = ttk.Label(ctrlpanel, text="Some text")
         self.sub_label.pack(side=Tk.BOTTOM)
         pause.pack(side=Tk.LEFT)
