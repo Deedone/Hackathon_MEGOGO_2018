@@ -44,12 +44,16 @@ def get_hash(filename):
         return hasher.hexdigest()
     raise Exception("Hashing error")
 
-def get_subs(segment): # segment is the name of .ts file (without .ts)
+def get_subs(segment, outfile=None): # segment is the name of .ts file (without .ts)
     r = sr.Recognizer()
+    flag = False
 
-    infile = "ts/"+segment + ".ts"
-    outfile = "wavs/"+segment + ".wav"
-
+    if outfile == None:
+        flag = True
+        infile = "ts/"+segment + ".ts"
+        outfile = "wavs/"+segment + ".wav"
+    else:
+        infile = outfile
 
 
     hs = get_hash(infile)
@@ -59,8 +63,8 @@ def get_subs(segment): # segment is the name of .ts file (without .ts)
         return cache
 
 
-
-    subprocess.run(["ffmpeg", "-i", infile, outfile,"-y","-loglevel", "panic","-hide_banner","-nostats"])
+    if flag:
+        subprocess.run(["ffmpeg", "-i", infile, outfile,"-y","-loglevel", "panic","-hide_banner","-nostats"])
 
 
     segmentAudio = sr.AudioFile(outfile)
@@ -75,6 +79,5 @@ def get_subs(segment): # segment is the name of .ts file (without .ts)
     except sr.UnknownValueError:
         pass
     write_cache(hs,{'sub':sub,'dur':dur})
-    os.remove(outfile)
     return {'sub':sub,'dur':dur}
 
