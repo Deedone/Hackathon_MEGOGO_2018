@@ -7,6 +7,7 @@ import time
 import atexit
 import math
 import wave
+import re
 
 class ThreadWithReturnValue(Thread):#StackOverflow rulez
     def __init__(self, group=None, target=None, name=None,
@@ -90,7 +91,35 @@ class SegmentManager:
                     
         combtext = api.get_subs("","./wavs/combined.wav")
         print("Combined - "+str(combtext))
+        #######################################################
+        count_all  = 0
+        count_sub1 = 0
+        count_sub2 = 0
 
+        for ch in str(combtext['sub']):
+            if ch == ' ':
+                count_all += 1
+        print(count_all)
+        for ch in str(self.data[start + 0]['subs']):
+            if ch == ' ':
+                
+                count_sub1 += 1
+
+        print(count_sub1)
+        num = 0
+        for i in range(count_sub1):
+          print(combtext['sub'].find(' ', num))
+          num = combtext['sub'].find(' ', num)
+          num +=1
+
+        print(num)
+        
+        string_sub1 =  combtext['sub'][0  :num]
+        string_sub2 =  combtext['sub'][num: ]
+        self.data[start + 0]['subs'] = string_sub1
+        self.data[start + 1]['subs'] = string_sub2
+        print('Super Combiner 11111 : ' + string_sub1 + '\n' + string_sub2)
+        print('Super Combiner 22222 :' + self.data[start + 0]['subs'] + '\n' + self.data[start + 1]['subs'] )
 
 
     def next(self):
@@ -146,4 +175,3 @@ def process(filename):
     return subs
     
 
-o = SegmentManager("./index.m3u8")
