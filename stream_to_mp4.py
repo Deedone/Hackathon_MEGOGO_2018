@@ -16,42 +16,51 @@ print(playlist)
 # тогда запрос удачен, иначе не удачен 
 #
 #
-headers = {
-    'Accept': '*/*',
-    'Accept-Encoding': 'gzip, deflate',
-    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
-    'Connection': 'keep-alive',
-    'Content-Length': '82',
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'DNT': '1',
-    'Host': 'ampatcape.com',
-    'Origin': 'http://ampatcape.com',
-    'Referer': 'http://ampatcape.com/video/b953c40ea738e66d/iframe?nocontrols=1&season=&episode=&ref=all1NnlGb0diUFo2dmNzaUlTYjZYcEF2bENkUDUwbnBabGtRN1prN20rVlY5M0lnNDZSR2xQTjIycEUya2pSWXZTUzQzWG5kcTlCV2VHM0ZlVko2SlBIYmtUTkVRaTNPT25RSG9ZM2N2SzREZUsyaVNpRm16Z3RqV3BGVzE2ZkpYc0ZSZDRoV0c5dVRRa2I4S216RjJyem5NSTJIL2FuQlN5U2pEZDN3Z0pJQU4rWHl2dHZMdnhQekxnVHJmMnk2LS1UOW9GL293d1JXbzNyL2VWSlZvWkVnPT0=--22c15de58bd9e09dd615f19608d4bff3c4b59e78',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
-    'X-Requested-With': 'XMLHttpRequest'
-}
-data = {
-    'name': 'click',
-    'vast_null': 'false',
-    'adb': 'false',
-    'domain_id': '455914',
-    'video_token': 'b953c40ea738e66d'
-}
+class RequestToSearch():
+
+    def __init__(self, string):
+        self.post()
+
+    def post(self, string):
+        headers = {            
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'Content-Length': '140',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'DNT': '1',
+            'Host': 'baskino.me',
+            'Origin': 'http://baskino.me',
+            'Referer': 'http://baskino.me/index.php?do=search',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+        }
+        data = {
+            'do': 'search',
+            'subaction': 'search',
+            'actors_only': '0',
+            'search_start': '0',
+            'full_search': '0',
+            'result_from': '1',
+            'result_from': '1',
+            'story': 'Операц'
+            }
 
 
-r = requests.post('http://ampatcape.com/stats/event', headers=headers, data=data)
-print(r.connection)
-print(r.headers)
-print(r.cookies)
-print(r.content)
-print(r.text)
+        r = requests.post('http://baskino.me/index.php?do=search', headers=headers, data=data)
+        return r
+        
+        
 
 # Запрос 2 на сайт для получения доступа к файлу, в котором идет ссылка на поток
 # если ответ ссылка "....."
 # тогда запрос удачен, иначе не удачен 
 #
 #
-
+#####################
+""""
 headers = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'Accept-Encoding': 'gzip, deflate',
@@ -78,7 +87,7 @@ print(r1.text)
 
 
 
-"""
+ 
 e.parse_query_string = function(e) {
         var t = e.match(/\?(.*)/);
         if (t && t[1]) {
@@ -97,3 +106,4 @@ e.parse_query_string = function(e) {
         return []
     }
     """
+""""

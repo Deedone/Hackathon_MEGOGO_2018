@@ -8,6 +8,7 @@ import atexit
 import math
 import wave
 import re
+from translator.translateSubtitles import translateSubtitles as Trans
 
 class ThreadWithReturnValue(Thread):#StackOverflow rulez
     def __init__(self, group=None, target=None, name=None,
@@ -32,6 +33,7 @@ class SegmentManager:
         self.preload = 10
         self.isstop = False
         self.time = 0
+        self.trans = True
 
         self.stream = mstream.load(path)
         if self.stream.is_variant:
@@ -52,6 +54,9 @@ class SegmentManager:
         self.uri = self.uri[:self.uri.rfind("/")+1]
         print("new uri %s" % (self.uri))
 
+    def toggleTrans():
+        self.trans = not self.trans
+
     def stop(self):
         self.isstop = True
         self.t.join()
@@ -71,10 +76,14 @@ class SegmentManager:
                 urllib.request.urlretrieve(uri,"ts/"+seg)
                 data = process(seg)
                 print(data)
-                self.data[to_load] = {'subs':data['sub'],'timestamp':self.time,'dur':data['dur']}
+                if self.trans:
+                    self.data[to_load] = {'subs':Trans(data['sub']),'timestamp':self.time,'dur':data['dur']}
+                else:
+                    self.data[to_load] = {'subs':data['sub'],'timestamp':self.time,'dur':data['dur']}
                 self.time += data['dur']
                 if to_load % 2 == 1:
-                    self.adjust_subs(to_load - 1)
+                    #self.adjust_subs(to_load - 1)
+                    pass
             time.sleep(0.2)
 
     def adjust_subs(self,start):
@@ -125,8 +134,8 @@ class SegmentManager:
 
         self.data[start + 0]['subs'] = string_sub1
         self.data[start + 1]['subs'] = string_sub2
-        print('Super Combiner 11111 : ' + string_sub1 + '\n' + string_sub2)
-        print('Super Combiner 22222 :' + self.data[start + 0]['subs'] + '\n' + self.data[start + 1]['subs'] )
+        print('Super Combiner 11111 : ' + (string_sub1 or "") + '\n' + (string_sub2 or ""))
+        print('Super Combiner 22222 :' + (self.data[start + 0]['subs'] or "") + '\n' + (self.data[start + 1]['subs'] or ""))
 
 
     def next(self):
@@ -182,4 +191,4 @@ def process(filename):
     return subs
     
 
-#o = SegmentManager("./index.m3u8")
+o = SegmentManager("./index.m3u8")

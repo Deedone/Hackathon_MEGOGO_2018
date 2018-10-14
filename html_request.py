@@ -57,6 +57,35 @@ class HTMLdata():
             print(str(i) + ' downloaded\n')
             i = i + 1
 
+    def get_img_tags_new(url):
+        movie_desc = ' '
+    
+        html = url.text
+        soup = BeautifulSoup(html, "html.parser" )
+        film_posts = soup.find('div', {'id': 'dle-content'})
+        film_lists = film_posts.find_all('div', {'class': 'shortpost'})
+        i = 0
+        for item in film_lists:
+            movie_link = item.find('img').get('src')                        #link to images
+            movie_desc = item.find('img').get('alt')                        #link to description(text)
+            movie_link_html = item.find('a').get('href')
+            print(movie_link + " \n "+ movie_desc + '\n' + movie_link_html)
+            
+            picture_full_url = str(movie_link)
+            destination = 'Program Files\\Pictures\\' + str(i) + '.jpg'
+            urllib.request.urlretrieve(picture_full_url, destination)      #downloading images into project folder(saving as 0-11 .jpg)
+            
+            handle = open('Program Files\\TvInfo\\' + str(i)+ ".tvInfo", "w")      #creating/opening file 0-11 and writing description in it
+            handle.write(movie_desc)
+            handle.close()
+            
+            handle_for_html = open('Program Files\\HtmlLink\\' + str(i)+ ".htmlLink", "w")      #creating/opening file 0-11 and writing description in it
+            handle_for_html.write(movie_link_html)
+            handle_for_html.close()
+            
+            print(str(i) + ' downloaded\n')
+            i = i + 1
+
     def __start_working(self, base_url):
         if base_url != None:
             response =  urllib.request.urlopen(base_url)
