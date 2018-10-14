@@ -33,14 +33,13 @@ class SegmentManager:
         self.preload = 10
         self.isstop = False
         self.time = 0
-        self.trans = True
+        self.trans = False
 
         self.stream = mstream.load(path)
         if self.stream.is_variant:
             self.fixvariant()
         self.t = Thread(target=self.manage)
         self.t.start()
-        print("Time to return")
         while len(self.data.keys()) < 1:
             time.sleep(0.1)
 
@@ -63,9 +62,8 @@ class SegmentManager:
     def fixtrans(self):
         lastindex = max(self.data.keys())
         for i in range(lastindex, max(0, lastindex - self.preload), -1):
-            print("Badyl")
+            print("Translating...")
             if self.trans:
-
                 self.data[i]['subs'] = Trans(self.data[i]['subs'], 'en', 'ru')
             else :
                 self.data[i]['subs'] = Trans(self.data[i]['subs'], 'ru', 'en')
@@ -156,7 +154,7 @@ class SegmentManager:
     def next(self):
         self.index = self.index+1
         lastindex = max(self.data.keys())
-        print('___________________Return____' + str(self.data[self.index])) 
+        print('Next subtitle - ' + str(self.data[self.index])) 
         if self.data[self.index]['subs'] == None:
             self.data[self.index]['subs'] = ""
             return self.data[self.index]
@@ -206,4 +204,4 @@ def process(filename):
     return subs
     
 
-o = SegmentManager("./index.m3u8")
+#o = SegmentManager("./index.m3u8")

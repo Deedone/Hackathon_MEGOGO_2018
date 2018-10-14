@@ -19,7 +19,7 @@ import requestToServer
 from translator import translateSubtitles
 
 current_page = 1
-empty_string = "                                                                                         "
+empty_string = "                                                                         "
 width=900
 height=500
 frame = 1
@@ -48,6 +48,7 @@ class Application(Frame):
         print(self.find.get())
         if self.find != "":
             HTMLdata.get_img_tags_new(requestToServer.RequestToSearch.post(self.find.get()))
+            self.clear_text()
             self.create_widgets(frame)
     
     def get_letter_count(self, word):
@@ -230,6 +231,7 @@ class Application(Frame):
         
         root1 = Tk()
         root1.protocol("WM_DELETE_WINDOW", self._quit)
+       # root1.geometry(x = 1600, y = 900)
         player = Player(root1, SM, link_m3u8, title="Video player(VLC)")
         
         

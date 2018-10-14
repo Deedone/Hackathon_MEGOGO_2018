@@ -60,13 +60,15 @@ class Player(Tk.Frame):
          The main window has to deal with events.
     """
     def __init__(self, parent, subtitles, link, title=None):
-        Tk.Frame.__init__(self, parent)
+        Tk.Frame.__init__(self ,parent, width=1600,height=900)
+        #Tk.attributes("-fullscreen", True)
         self.check = False
         self.subtitles = subtitles
         self.parent = parent
         self.t = Thread()
         self.sub_label = Label()
         self.link = link
+        self.parent = parent
         
         if title == None:
             title = "Subtitiles and mere translate"
@@ -85,10 +87,12 @@ class Player(Tk.Frame):
         # The second panel holds controls
         self.player = None
         self.videopanel = Frame(self.parent)
+           
         self.canvas = Tk.Canvas(self.videopanel).pack(fill=Tk.BOTH,expand=1)
         self.videopanel.pack(fill=Tk.BOTH,expand=1)
+        #self.videopanel.config(width=1000, height=800)
 
-        ctrlpanel = Frame(self.parent)
+        ctrlpanel = Frame(self.parent,width=1600,height=900)
 
         #pause_img = PhotoImage(file="c:/Users/Alex/Documents/GitHub/Hackathon_MEGOGO_2018/icons/pausebutton.gif")
         pause  = Button(ctrlpanel,
@@ -124,16 +128,16 @@ class Player(Tk.Frame):
                             )
 
         volume = Button(ctrlpanel,
-                            text="Volume",
+                            text="Translate",
                             background="#555",     # фоновый цвет кнопки
                             foreground="#ccc",     # цвет текста
                             padx="20",             # отступ от границ до содержимого по горизонтали
                             pady="8",              # отступ от границ до содержимого по вертикали
                             font="16",                           
-                            command=self.OnSetVolume
+                            command=self.subtitles.toggleTrans
                             )
 
-        self.sub_label = Label(ctrlpanel, text="Some text", font = 'Arial 10  bold ')
+        self.sub_label = Label(ctrlpanel, text="Some text", font = 'Arial 14  bold ')
         self.sub_label.pack(side=Tk.BOTTOM)
         pause.pack(side=Tk.LEFT)
         play.pack(side=Tk.LEFT)
@@ -218,19 +222,18 @@ class Player(Tk.Frame):
         cTime = 0
         while self.check: # then start to print subtitles
             while not self.player.is_playing(): # wait for video to start
-                print("Ya zhdu...")
+                print("\rWaiting...", end=" ")
                 time.sleep(0.01)
             sub_dict = self.subtitles.next()
-            print('_____1111___'+sub_dict['subs'])
+            print("Waiting...")
             if sub_dict['subs'] == None:
                 return
-            print('_____2222___'+sub_dict['subs'])
             lbl = '                                                                                           '
 
             print('DURATION : '+str(sub_dict['dur']))
                
             self.sub_label['text'] =  lbl
-            self.sub_label['text'] = str(sub_dict['subs']) + '\n' + str(sub_dict['timestamp'])
+            self.sub_label['text'] = str(sub_dict['subs'])
             self.sub_label.pack()
             #print('PLAYER'+str(vlc.MediaPlayer.get_time()))
             #time.sleep(sub_dict['dur'])
@@ -247,7 +250,7 @@ class Player(Tk.Frame):
         If no file is loaded, open the dialog window.
         """
         #print('__________________________' + str(self.player.get_time()))
-        print(self.player.is_playing())
+        #print(self.player.is_playing())
 
         self.check = True
         if not self.t.is_alive():
@@ -347,7 +350,7 @@ class Player(Tk.Frame):
         # and our volume slider has range [0, 100], just divide by 2.
         self.volume_var.set(self.player.audio_get_volume())
 
-    def OnSetVolume(self):
+    def OnTranslate(self):
         """Set the volume according to the volume sider.
         """
         volume = self.volume_var.get()

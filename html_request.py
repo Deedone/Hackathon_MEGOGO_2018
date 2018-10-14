@@ -14,7 +14,7 @@ class HTMLdata():
     
     def __init__(self, page_count):
         self.create_folders()
-        self.get_img_tags('http://baskino.me/', page_count)
+        self.get_img_tags('http://baskino.me', page_count)
         #self.__start_working('http://gidonline.in/')
 
     def create_folders(self):
@@ -30,7 +30,7 @@ class HTMLdata():
 
     def get_img_tags(self, url, page_number):
         movie_desc = ' '
-        response =  urllib.request.urlopen(url + '/page/'+str(page_number)+'/')
+        response =  urllib.request.urlopen(url + '/page/'+str(page_number))
         html = response.read()
         soup = BeautifulSoup(html, "html.parser" )
         film_posts = soup.find('div', {'id': 'dle-content'})
