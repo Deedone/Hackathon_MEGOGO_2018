@@ -74,7 +74,8 @@ class SegmentManager:
                 self.data[to_load] = {'subs':data['sub'],'timestamp':self.time,'dur':data['dur']}
                 self.time += data['dur']
                 if to_load % 2 == 1:
-                    self.adjust_subs(to_load - 1)
+                    #self.adjust_subs(to_load - 1)
+                    pass
             time.sleep(0.2)
 
     def adjust_subs(self,start):
@@ -125,8 +126,8 @@ class SegmentManager:
 
         self.data[start + 0]['subs'] = string_sub1
         self.data[start + 1]['subs'] = string_sub2
-        print('Super Combiner 11111 : ' + string_sub1 + '\n' + string_sub2)
-        print('Super Combiner 22222 :' + self.data[start + 0]['subs'] + '\n' + self.data[start + 1]['subs'] )
+        print('Super Combiner 11111 : ' + (string_sub1 or "") + '\n' + (string_sub2 or ""))
+        print('Super Combiner 22222 :' + (self.data[start + 0]['subs'] or "") + '\n' + (self.data[start + 1]['subs'] or ""))
 
 
     def next(self):

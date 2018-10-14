@@ -23,6 +23,7 @@ from threading import Thread
 import tkinter as Tk
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
+from translator import translateSubtitles
 
 #1 import standard libraries
 import os
@@ -214,10 +215,11 @@ class Player(Tk.Frame):
             self.volslider.set(self.player.audio_get_volume())
 
     def LoadSubTitiles(self):
-        while not self.player.is_playing(): # wait for video to start
-            pass
+        cTime = 0
         while self.check: # then start to print subtitles
-            
+            while not self.player.is_playing(): # wait for video to start
+                print("Ya zhdu...")
+                time.sleep(0.01)
             sub_dict = self.subtitles.next()
             print('_____1111___'+sub_dict['subs'])
             if sub_dict['subs'] == None:
@@ -231,8 +233,12 @@ class Player(Tk.Frame):
             self.sub_label['text'] = str(sub_dict['subs']) + '\n' + str(sub_dict['timestamp'])
             self.sub_label.pack()
             #print('PLAYER'+str(vlc.MediaPlayer.get_time()))
-            time.sleep(sub_dict['dur'])
-                    
+            #time.sleep(sub_dict['dur'])
+            while cTime < sub_dict['dur']:
+                if self.player.is_playing():
+                    cTime += 0.01
+                time.sleep(0.01)
+            cTime = 0
         
         
         

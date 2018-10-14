@@ -16,7 +16,7 @@ from segment_processor import SegmentManager
 import m3u8
 import requests
 import requestToServer  
-#import translator.translateSubtitles
+from translator import translateSubtitles
 
 current_page = 1
 empty_string = "                                                                                         "
