@@ -54,8 +54,22 @@ class SegmentManager:
         self.uri = self.uri[:self.uri.rfind("/")+1]
         print("new uri %s" % (self.uri))
 
-    def toggleTrans():
+    def toggleTrans(self):
+
         self.trans = not self.trans
+        t = Thread(target=self.fixtrans)
+        t.start()
+
+    def fixtrans(self):
+        lastindex = max(self.data.keys())
+        for i in range(lastindex, max(0, lastindex - self.preload), -1):
+            print("Badyl")
+            if self.trans:
+
+                self.data[i]['subs'] = Trans(self.data[i]['subs'], 'en', 'ru')
+            else :
+                self.data[i]['subs'] = Trans(self.data[i]['subs'], 'ru', 'en')
+
 
     def stop(self):
         self.isstop = True
@@ -75,11 +89,12 @@ class SegmentManager:
                 uri = self.uri + seg
                 urllib.request.urlretrieve(uri,"ts/"+seg)
                 data = process(seg)
-                print(data)
+                
                 if self.trans:
-                    self.data[to_load] = {'subs':Trans(data['sub']),'timestamp':self.time,'dur':data['dur']}
+                    self.data[to_load] = {'subs':Trans(data['sub'], 'en', 'ru'),'timestamp':self.time,'dur':data['dur']}
                 else:
                     self.data[to_load] = {'subs':data['sub'],'timestamp':self.time,'dur':data['dur']}
+                print(self.data[to_load])
                 self.time += data['dur']
                 if to_load % 2 == 1:
                     #self.adjust_subs(to_load - 1)
