@@ -1,35 +1,39 @@
 from browsermobproxy import Server
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from threading import Thread
+#from threading import Thread
 import time
 
-proxyContainer = {'proxy':None, 'server':None}
+#proxyContainer = {'proxy':None, 'server':None}
 
 
-def loadProxy(holder):
+#def loadProxy(holder):
 
-    server = Server(r"c:\Users\Alex\Documents\GitHub\Hackathon_MEGOGO_2018\getStreamFile\browsermob-proxy\bin\browsermob-proxy")
-    server.start()
-    proxy = server.create_proxy()
+    #server = Server(r"c:\Users\Alex\Documents\GitHub\Hackathon_MEGOGO_2018\getStreamFile\browsermob-proxy\bin\browsermob-proxy")
+    #server.start()
+    #proxy = server.create_proxy()
 
-    holder['proxy'] = proxy
-    holder['server'] = server
-    print("PROXXXY LOADED")
+    #holder['proxy'] = proxy
+    #holder['server'] = server
+    #print("PROXXXY LOADED")
 
 
-proxyThread = Thread(target=loadProxy,args=(proxyContainer,))
-proxyThread.start()
+#proxyThread = Thread(target=loadProxy,args=(proxyContainer,))
+#proxyThread.start()
 
 def main():
     print(getStreamFile("http://baskino.me/films/boeviki/105-nachalo.html"))
 
 def getStreamFile(linkToFilm):
-    print("WAITING FOR PROXY")
-    proxyThread.join()
-    print("DONE WAITING")
-    proxy = proxyContainer["proxy"]
-    server = proxyContainer["server"]
+    #print("WAITING FOR PROXY")
+    #proxyThread.join()
+    #print("DONE WAITING")
+    #proxy = proxyContainer["proxy"]
+    #server = proxyContainer["server"]
+
+    server = Server(r"c:\Users\Alex\Documents\GitHub\Hackathon_MEGOGO_2018\getStreamFile\browsermob-proxy\bin\browsermob-proxy")
+    server.start()
+    proxy = server.create_proxy()
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--proxy-server={0}".format(proxy.proxy))
@@ -62,10 +66,10 @@ def getStreamFile(linkToFilm):
             if "request" in elem.keys():
                 if "queryString" in elem['request'].keys():
                     if len(elem['request']['queryString']) > 0 and elem['request']['queryString'][0]['name'] == "tok":
-                        browser.quit()
-                        server.stop()
                         if "m3u8" in elem['request']['url']:
-                            return elem['request']['url']
+                        	browser.quit()
+	                        server.stop()
+	                        return elem['request']['url']
 
         if i > 20:
             print("Error in getting requests. Restart the app.") # TODO: restart browser() in case requests won't load
