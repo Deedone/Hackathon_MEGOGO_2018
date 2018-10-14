@@ -113,9 +113,16 @@ class SegmentManager:
           num +=1
 
         print(num)
-        
-        string_sub1 =  combtext['sub'][0  :num]
-        string_sub2 =  combtext['sub'][num: ]
+        if  count_sub1 + 1 >= count_all:
+            string_sub1 =  combtext['sub']
+            string_sub2 =  ""
+        elif count_sub2 + 1 >= count_all:
+            string_sub1 =  ""
+            string_sub2 =   combtext['sub']
+        else:
+            string_sub1 =  combtext['sub'][0  :num]
+            string_sub2 =  combtext['sub'][num: ]
+
         self.data[start + 0]['subs'] = string_sub1
         self.data[start + 1]['subs'] = string_sub2
         print('Super Combiner 11111 : ' + string_sub1 + '\n' + string_sub2)
@@ -175,3 +182,4 @@ def process(filename):
     return subs
     
 
+#o = SegmentManager("./index.m3u8")
